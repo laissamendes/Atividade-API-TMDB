@@ -16,14 +16,15 @@ onMounted(async () => {
 const movies = ref([]);
 
 const listMovies = async (genreId) => {
+  genreStore.setCurrentGenreId(genreId);
   isLoading.value = true;
   const response = await api.get('discover/movie', {
     params: {
       with_genres: genreId,
-      language: 'pt-BR'
-    }
+      language: 'pt-BR',
+    },
   });
-  movies.value = response.data.results
+  movies.value = response.data.results;
   isLoading.value = false;
 };
 
@@ -34,21 +35,22 @@ const listMovies = async (genreId) => {
   await genreStore.getAllGenres('movie')
   isLoading.value = false
 })
+
+
 </script>
 
 <template>
   <h1>Filmes</h1>
   <ul class="genre-list">
-    <li
-      v-for="genre in genreStore.genres"
-      :key="genre.id"
-      @click="listMovies(genre.id)"
-      class="genre-item"
-    >
+        <li
+    v-for="genre in genreStore.genres"
+    :key="genre.id"
+    @click="listMovies(genre.id)"
+    class="genre-item"
+    :class="{ active: genre.id === genreStore.currentGenreId }"
+  >
     
-      {{ genre.name }}
-    
-    </li>
+  </li>
   </ul>
   <loading v-model:active="isLoading" is-full-page />
   <div class="movie-list">
@@ -59,9 +61,14 @@ const listMovies = async (genreId) => {
       <p class="movie-title">{{ movie.title }}</p>
       <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
       <p class="movie-genres">
-    <span v-for="genre_id in movie.genre_ids" :key="genre_id" @click="listMovies(genre_id)">
-    {{ genreStore.getGenreName(genre_id) }}
-  </span>
+        <span
+  v-for="genre_id in movie.genre_ids"
+  :key="genre_id"
+  @click="listMovies(genre_id)"
+  :class="{ active: genre.id === genreStore.currentGenreId }"
+>
+  
+</span>
 </p>
     </div>
     
@@ -69,6 +76,16 @@ const listMovies = async (genreId) => {
 </div>
 </template>
 <style scoped>
+.active {
+  background-color: #67b086;
+  font-weight: bolder;
+}
+
+.movie-genres span.active {
+  background-color: #abc322;
+  color: #000;
+  font-weight: bolder;
+}
 .genre-list {
   display: flex;
   justify-content: center;
