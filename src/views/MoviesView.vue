@@ -2,19 +2,23 @@
 import { ref, onMounted } from 'vue'
 import api from '@/plugins/axios'
 import Loading from 'vue-loading-overlay'
-import genreStore from '@/stores/genre'
+import  genreStore from '@/stores/genre'
+
 import { useRouter } from 'vue-router'
-
 const router = useRouter()
-const isLoading = ref(false);
-const genres = ref([])
-const movies = ref([]);
-const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
 
+const isLoading = ref(false);
+
+const genres = ref([])
+
+function openMovie(movieId) {
+  router.push({ name: 'MovieDetails', params: { movieId } });
+}
 onMounted(async () => {
   const response = await api.get('genre/movie/list?language=pt-BR')
   genres.value = response.data.genres
 })
+const movies = ref([]);
 
 const listMovies = async (genreId) => {
   genreStore.setCurrentGenreId(genreId);
@@ -29,15 +33,13 @@ const listMovies = async (genreId) => {
   isLoading.value = false;
 };
 
+const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
+
 onMounted(async () => {
   isLoading.value = true
   await genreStore.getAllGenres('movie')
   isLoading.value = false
 })
-
-function openMovie(movieId) {
-  router.push({ name: 'MovieDetails', params: { movieId } });
-}
 </script>
 
 <template>
@@ -52,11 +54,12 @@ function openMovie(movieId) {
   <div class="movie-list">
     <div v-for="movie in movies" :key="movie.id" class="movie-card">
 
-      <img
+<img
   :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
   :alt="movie.title"
   @click="openMovie(movie.id)"
-/>      <div class="movie-details">
+/>
+      <div class="movie-details">
         <p class="movie-title">{{ movie.title }}</p>
         <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
         <p class="movie-genres">
@@ -81,7 +84,7 @@ function openMovie(movieId) {
 }
 
 .genre-item {
-  background-color: #387250;
+  background-color: #373b39;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   color: #fff;
@@ -89,8 +92,8 @@ function openMovie(movieId) {
 
 .genre-item:hover {
   cursor: pointer;
-  background-color: #4e9e5f;
-  box-shadow: 0 0 0.5rem #387250;
+  background-color: #4b4d4b;
+  box-shadow: 0 0 0.5rem #151616;
 }
 
 .movie-list {
@@ -144,7 +147,7 @@ function openMovie(movieId) {
 }
 
 .movie-genres span {
-  background-color: #748708;
+  background-color: #6d6d6d;
   border-radius: 0.5rem;
   padding: 0.2rem 0.5rem;
   color: #fff;
@@ -154,17 +157,17 @@ function openMovie(movieId) {
 
 .movie-genres span:hover {
   cursor: pointer;
-  background-color: #455a08;
-  box-shadow: 0 0 0.5rem #748708;
+  background-color: #333333;
+  box-shadow: 0 0 0.5rem #151616;
 }
 
 .active {
-  background-color: #67b086;
+  background-color: #808080;
   font-weight: bolder;
 }
 
 .movie-genres span.active {
-  background-color: #abc322;
+  background-color: #808080;
   color: #000;
   font-weight: bolder;
 }

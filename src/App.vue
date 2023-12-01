@@ -17,8 +17,8 @@ onMounted(async () => {
   <header>
     <nav>
       <router-link to="/">Home</router-link>
-      <router-link to="/movies">Filmes</router-link>
-      <router-link to="/tv">Programas de TV</router-link>
+      <router-link to="/movies">Movies</router-link>
+      <router-link to="/tv">TV shows</router-link>
     </nav>
   </header>
   <main>

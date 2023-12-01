@@ -25,4 +25,5 @@ body {
     sans-serif;
   font-size: 15px;
   text-rendering: optimizeLegibility;
+  background-color: rgb(207, 207, 207);
 }

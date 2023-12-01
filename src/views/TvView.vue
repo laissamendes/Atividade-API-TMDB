@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/plugins/axios'
 import Loading from 'vue-loading-overlay'
 import genreStore from '@/stores/genre'
 
 const isLoading = ref(false);
-
+const router = useRouter()
 const genres = ref([])
 
 onMounted(async () => {
@@ -13,6 +14,9 @@ onMounted(async () => {
   genres.value = response.data.genres
 })
 const TV = ref([]);
+function openTV(TVId) {
+  router.push({ name: 'MovieDetails', params: { TVId } });
+}
 
 const listTV = async (genreId) => {
   isLoading.value = true;
@@ -26,6 +30,7 @@ const listTV = async (genreId) => {
   TV.value = response.data.results
   isLoading.value = false;
 };
+const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
 
   onMounted(async () => {
   isLoading.value = true
@@ -43,18 +48,15 @@ const listTV = async (genreId) => {
       @click="listTV(genre.id)" 
       class="genre-item"
     >
-    
       {{ genre.name }}
-    
     </li>
-
   </ul>
   <loading v-model:active="isLoading" is-full-page />
 
   <div class="tv-list">
   <div v-for="tv in TV" :key="tv.id" class="tv-card">
     
-    <img :src="`https://image.tmdb.org/t/p/w500${tv.poster_path}`" :alt="tv.name" />
+    <img :src="`https://image.tmdb.org/t/p/w500${tv.poster_path}`" :alt="tv.title" @click="openTV(TV.id)"/>
     <div class="tv-details">
       <p class="tv-title">{{ tv.name}}</p>
       <p class="tv-original_name">{{ tv.original_name }}</p>
@@ -68,7 +70,6 @@ const listTV = async (genreId) => {
   </div>
 </div>
 </template>
-  
   <style scoped>
   .genre-list {
     display: flex;
@@ -80,7 +81,10 @@ const listTV = async (genreId) => {
   }
   
   .genre-item {
-    background-color: #5d6424;
+   background-color: #373b39;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  color: #fff;;
     border-radius: 1rem;
     padding: 0.5rem 1rem;
     align-self: center;
@@ -91,8 +95,8 @@ const listTV = async (genreId) => {
   
   .genre-item:hover {
     cursor: pointer;
-    background-color: #7d8a2e;
-    box-shadow: 0 0 0.5rem #5d6424;
+  background-color: #4b4d4b;
+  box-shadow: 0 0 0.5rem #151616;
   }
   .tv-list {
   display: flex;
@@ -135,7 +139,7 @@ const listTV = async (genreId) => {
 }
 
 .tv-genres span {
-  background-color: #748708;
+  background-color: #6d6d6d;
   border-radius: 0.5rem;
   padding: 0.2rem 0.5rem;
   color: #fff;
@@ -145,8 +149,24 @@ const listTV = async (genreId) => {
 
 .tv-genres span:hover {
   cursor: pointer;
-  background-color: #455a08;
-  box-shadow: 0 0 0.5rem #748708;
+  background-color: #333333;
+  box-shadow: 0 0 0.5rem #151616;
+}
+.tv-genres span:hover {
+  cursor: pointer;
+  background-color: #333333;
+  box-shadow: 0 0 0.5rem #151616;
+}
+
+.active {
+  background-color: #808080;
+  font-weight: bolder;
+}
+
+.tv-genres span.active {
+  background-color: #808080;
+  color: #000;
+  font-weight: bolder;
 }
 
 </style>
