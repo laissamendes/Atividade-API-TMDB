@@ -14,11 +14,12 @@ onMounted(async () => {
   genres.value = response.data.genres
 })
 const TV = ref([]);
-function openTV(TVId) {
-  router.push({ name: 'MovieDetails', params: { TVId } });
+
+function openTV(TvId) {
+  router.push({ name: 'TvDetails', params: { TvId } });
 }
 
-const listTV = async (genreId) => {
+const listTv = async (genreId) => {
   isLoading.value = true;
   const response = await api.get('discover/tv?language=pt-BR', {
     params: {
@@ -60,8 +61,9 @@ const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
     <div class="tv-details">
       <p class="tv-title">{{ tv.name}}</p>
       <p class="tv-original_name">{{ tv.original_name }}</p>
+      <p class="tv-release-date">{{ formatDate(tv.release_date) }}</p>
       <p class="tv-genres">
-        <span v-for="genre_id in tv.genre_ids" :key="genre_id" @click="listTV(genre_id)">
+        <span v-for="genre_id in tv.genre_ids" :key="genre_id" @click="listTv(genre_id)" :class="{ active: genre - id === genreStore.currentGenreId }">
     {{ genreStore.getGenreName(genre_id) }}
   </span>
 </p>
@@ -71,6 +73,10 @@ const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
 </div>
 </template>
   <style scoped>
+
+h1{
+  text-align: center;
+}
   .genre-list {
     display: flex;
     justify-content: center;

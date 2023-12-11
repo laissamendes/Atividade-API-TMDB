@@ -74,6 +74,9 @@ onMounted(async () => {
   </div>
 </template>
 <style scoped>
+h1{
+  text-align: center;
+}
 .genre-list {
   display: flex;
   justify-content: center;
